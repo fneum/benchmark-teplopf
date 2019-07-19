@@ -1,0 +1,6 @@
+benchmarks
+networks
+results
+dconf
+
+.snakemake

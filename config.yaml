@@ -1,0 +1,16 @@
+scenario:
+  clusters: [25,50,100]
+  ll: ['vopt']
+  snapshots: [100,200,400]
+  opts: [Co2L0.05-1H]
+  formulation: [angles, kirchhoff]
+  gap: [0.02,0.01,0.005]
+  lv: [1.25,1.5,2]
+
+iterations: 2
+
+solver:
+  name: gurobi
+  MIPFocus: 2
+  Heuristics: 0.25
+  Cuts: 1
