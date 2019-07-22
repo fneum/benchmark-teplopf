@@ -6,7 +6,7 @@ wildcard_constraints:
     opts="[-+a-zA-Z0-9\.]*",
     snapshots="[0-9]*",
     lv="[0-9\.]*",
-    gap="[0-9\.]*",
+    gap="[+-e0-9\.]*",
     formulation="(kirchhoff|angles)"
 
 rule solve_network:
@@ -15,7 +15,8 @@ rule solve_network:
         network="results/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.nc",
     log: 
         memory="benchmarks/memorylogger_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.log",
-        times="benchmarks/times_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv"
+        times="benchmarks/times_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv",
+        solver="benchmarks/solver_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv"
     benchmark: "benchmarks/snakemake_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.txt"
     script: "scripts/solve.py"
 

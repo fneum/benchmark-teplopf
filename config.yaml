@@ -1,16 +1,17 @@
 scenario:
-  clusters: [25,50,100]
+  clusters: [25,50,75,100]
   ll: ['vopt']
-  snapshots: [100,200,400]
-  opts: [Co2L0.05-1H]
+  snapshots: [25,50,75,100]
+  opts: [Co2L0.1-1H, Co2L0.2-1H]
   formulation: [angles, kirchhoff]
-  gap: [0.02,0.01,0.005]
-  lv: [1.25,1.5,2]
+  gap: [0.005,0.001]
+  lv: [1.0,2.0]
 
-iterations: 2
+iterations: 1
 
 solver:
   name: gurobi
-  MIPFocus: 2
-  Heuristics: 0.25
+  #MIPFocus: 2
+  Heuristics: 0.5
   Cuts: 1
+  TimeLimit: 20000
