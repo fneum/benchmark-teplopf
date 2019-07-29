@@ -25,7 +25,7 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
             n.lines.loc[n.lines.num_parallel==0., 'num_parallel'] = 1.
             n.lines.s_nom_extendable=True
             n.lines.s_nom_max = n.lines.s_nom + 1700 * float(snakemake.wildcards.lv)#n.lines.s_nom * float(snakemake.wildcards.lv)
-            n.links.p_nom_max = 2000.
+            n.links.p_nom_max = n.links.p_snom + 4000
             n.global_constraints.constant = n.global_constraints.constant / 2
             n.calculate_dependent_values()
         times["loading {}".format(i)] = t.usec
