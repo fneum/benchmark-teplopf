@@ -22,8 +22,12 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
 
         with timer("loading network") as t:
             n = pypsa.Network(snakemake.input[0])
+            n.lines.loc[n.lines.num_parallel==0., 'num_parallel'] = 1.
             n.lines.s_nom_extendable=True
-            n.lines.s_nom_max = n.lines.s_nom * float(snakemake.wildcards.lv)
+            n.lines.s_nom_max = n.lines.s_nom + 1700 * float(snakemake.wildcards.lv)#n.lines.s_nom * float(snakemake.wildcards.lv)
+            n.links.p_nom_max = n.links.p_nom + 2000.
+            n.global_constraints.constant = n.global_constraints.constant / 2
+            n.calculate_dependent_values()
         times["loading {}".format(i)] = t.usec
 
         with timer("infer candidates") as t:
@@ -38,7 +42,8 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
         with timer("solving model") as t:
             pypsa.opf.network_lopf_prepare_solver(n, solver_name)
             pypsa.opf.network_lopf_solve(n, formulation=snakemake.wildcards.formulation,
-                solver_options=solver_options)
+                solver_options=solver_options,
+                solver_logfile=snakemake.log.solver)
         times["solving {}".format(i)] = t.usec
 
         with timer("exporting network") as t:
