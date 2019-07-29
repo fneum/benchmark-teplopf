@@ -5,6 +5,9 @@ import numpy as np
 import re, os
 from textwrap import dedent
 
+import pandas as pd
+import pypsa
+
 def extract_from_log(logfile, solver_name):
 
     if solver_name == 'gurobi':
@@ -20,6 +23,8 @@ def extract_from_log_cplex(logfile):
 
 # https://github.com/FRESNA/benchmark-lopf
 def extract_from_log_gurobi(logfile):
+
+    stats = {}
 
     # Extract info from log file
     with open(logfile) as log_fp:
@@ -108,7 +113,7 @@ if __name__ == '__main__':
     network = pypsa.Network(snakemake.input.network)
 
     solve_conf = snakemake.config['solver']
-    solver_name = solve_config['name']
+    solver_name = solve_conf['name']
 
     stats = extract_from_log(snakemake.input.solver, solver_name)
 
@@ -121,15 +126,15 @@ if __name__ == '__main__':
     stats['threads'] = solve_conf['Threads']
     stats['walltime'] = solve_conf['TimeLimit']
 
-    for o in snakemake.wildcards.opts:
+    for o in snakemake.wildcards.opts.split('-'):
         if 'Co2L' in o:
             m = re.findall("[0-9]*\.?[0-9]+$", o)
             stats['co2limit'] = float(m[0])
 
     clines = network.lines.loc[~network.lines.operative]
     elines = network.lines.loc[network.lines.operative]
-    etwkm = (elines.length * elines.s_nom_opt).sum() / 1e6
     ctwkm = (clines.length * clines.s_nom_opt).sum() / 1e6
+    etwkm = (elines.length * elines.s_nom_opt).sum() / 1e6
 
     stats['new_circuits'] = len(clines.loc[clines.s_nom_opt>0])
     stats['rel_exp_volume'] = ctwkm / etwkm
