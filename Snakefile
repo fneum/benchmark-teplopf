@@ -17,6 +17,7 @@ rule solve_network:
         memory="benchmarks/memorylogger_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.log",
         times="benchmarks/times_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv",
         solver="benchmarks/solver_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.log"
+    threads: config["solver"]["Threads"]+1
     benchmark: "benchmarks/snakemake_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.txt"
     script: "scripts/solve.py"
 
