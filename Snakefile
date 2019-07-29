@@ -20,6 +20,22 @@ rule solve_network:
     benchmark: "benchmarks/snakemake_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.txt"
     script: "scripts/solve.py"
 
+rule summarize_individual:
+    input:
+        network="results/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.nc",
+        memory="benchmarks/memorylogger_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.log",
+        times="benchmarks/times_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv",
+        solver="benchmarks/solver_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.log"
+    output: "results/summaries/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv"
+    script: "scripts/logs.py"
+
+rule summarize_all:
+    input:
+        expand("results/summaries/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.csv",
+                **config['scenario'])
+    output: "results/summaries/joint_summary.csv"
+    script: "scripts/summary.py"
+
 rule solve_all:
     input:
         expand("results/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_{formulation}.nc",

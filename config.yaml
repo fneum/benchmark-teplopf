@@ -1,7 +1,9 @@
 scenario:
-  clusters: [37]
+  clusters: [100,200,300,400,500,600,700,800,900,1000]
+  #clusters: [37]
   ll: ['vopt']
-  snapshots: [1,5,100,200,300,400]
+  snapshots: [1,5]
+  #snapshots: [1,5,100,200,300,400]
   opts: [Co2L0.1-1H, Co2L0.2-1H]
   formulation: [angles, kirchhoff]
   gap: [0.005,0.001]
