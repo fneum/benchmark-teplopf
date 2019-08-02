@@ -1,0 +1,6 @@
+[submodule "pypsa-eur-germany"]
+	path = pypsa-eur-germany
+	url = https://github.com/fneum/pypsa-eur.git
+[submodule "pypsa-eur-baltics"]
+	path = pypsa-eur-baltics
+	url = https://github.com/fneum/pypsa-eur.git
