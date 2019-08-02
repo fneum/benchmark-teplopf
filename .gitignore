@@ -1,6 +1,8 @@
+.ipynb*
 benchmarks
 networks
 results
+evaluation
 dconf
 
 .snakemake
