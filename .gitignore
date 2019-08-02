@@ -1,8 +1,11 @@
 .ipynb*
-benchmarks
-networks
-results
-evaluation
+benchmarks/*
+networks/*
+results/*
+evaluation/*
 dconf
 
 .snakemake
+
+# don't ignore keep files
+!.keep
