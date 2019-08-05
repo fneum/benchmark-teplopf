@@ -1,3 +1,5 @@
+# joins the summaries of individual runs into one pd.DataFrame and .csv file
+
 import pandas as pd
 import numpy as np
 
@@ -14,16 +16,16 @@ for scenario in snakemake.input:
 df = df.T
 
 dtypelist = [np.int, np.int, np.int, np.float, 
-          np.int, np.int, np.int, np.int,
-          np.int, np.int ,np.int ,np.int,
-          np.int, np.str, np.float, np.float,
-          np.float, np.float, np.float,
-          np.float, np.float, np.float,
-          np.float, np.int, np.int, np.int,
-          np.float, np.str, np.float, np.int,
-          np.int, np.int, np.float, np.float,
-          np.float, np.float, np.float,
-          np.float, np.float, np.float]
+             np.int, np.int, np.int, np.int,
+             np.int, np.int ,np.int ,np.int,
+             np.int, np.str, np.float, np.float,
+             np.float, np.float, np.float,
+             np.float, np.float, np.float,
+             np.float, np.int, np.int, np.int,
+             np.float, np.str, np.float, np.int,
+             np.int, np.int, np.float, np.float,
+             np.float, np.float, np.float,
+             np.float, np.float, np.float]
 dtypes = dict(zip(df.columns, dtypelist))
 df = df.astype(dtypes)
 

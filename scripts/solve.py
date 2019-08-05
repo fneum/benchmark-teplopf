@@ -16,8 +16,9 @@ milp_solver_options = snakemake.config['milp_solver']
 milp_solver_name = milp_solver_options.pop('name')
 milp_solver_options['MIPGap'] = float(snakemake.wildcards.gap)
 
-def get_synchronizer_candidates(n):
-    # specific to lithuania and poland
+def substitute_interconnectors(n):
+    # currently specific to lithuania and poland
+    # for synchronizing other countries adaptations are necessary
 
     synchronizers = None
     for c in range(1,snakemake.config['synchronizer_circuits']+1):
@@ -76,7 +77,7 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
                 link_expansion_volume = ((n.links.p_nom_opt - n.links.p_nom) * n.links.length).sum() / 1e6  # TWkm
                 logger.info("Volume of continuous transmission line expansion is {0:.2f} TWkm for links and {0:.2f} TWkm for lines.".format(link_expansion_volume, line_expansion_volume))
                 if snakemake.wildcards.region == 'baltics':
-                    n.lines = get_synchronizer_candidates(n)
+                    n.lines = substitute_interconnectors(n)
             times["prepare tep {}".format(i)] = t.usec
 
         with timer("infer candidates") as t:

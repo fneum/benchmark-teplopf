@@ -1,3 +1,6 @@
+# extracts logged data from multiple sources such as
+# the pypsa network and the solver logfile
+
 import logging
 logging.basicConfig(level=logging.WARNING)
 
@@ -12,16 +15,10 @@ def extract_from_log(logfile, solver_name):
 
     if solver_name == 'gurobi':
         return extract_from_log_gurobi(logfile)
-    elif solver_name == 'cplex':
-        return extract_from_log_cplex(logfile)
     else:
         raise NotImplementedError("Log extraction not defined for solver {}".format(solver_name))
 
-# https://github.com/FRESNA/benchmark-lopf
-def extract_from_log_cplex(logfile):
-    pass
-
-# https://github.com/FRESNA/benchmark-lopf
+# adapted from https://github.com/FRESNA/benchmark-lopf
 def extract_from_log_gurobi(logfile):
 
     stats = {}

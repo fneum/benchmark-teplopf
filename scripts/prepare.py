@@ -1,3 +1,7 @@
+# prepares a network for solving,
+# including time series aggregation and
+# load shedding
+
 import pypsa
 import pandas as pd
 import tsam.timeseriesaggregation as tsam
@@ -48,14 +52,15 @@ if __name__ == '__main__':
 
     n = pypsa.Network(snakemake.input[0])
 
-    # workaround fixed in https://github.com/PyPSA/pypsa-eur/commit/97985e3c5219a75392291125914225d116ba81e9
+    # >>> workaround fixed in https://github.com/PyPSA/pypsa-eur/commit/97985e3c5219a75392291125914225d116ba81e9
     n.lines.loc[n.lines.num_parallel==0., 'num_parallel'] = 1.
     n.lines.s_nom_extendable=True
     n.calculate_dependent_values()
+    # <<<
 
     target_snapshots = snakemake.wildcards.snapshots
 
-    if not (target_snapshots=='8760' or target_snapshots==''):
+    if not (target_snapshots == '8760' or target_snapshots == ''):
         logger.info('Clustering is required.')
         n = cluster_snapshots(n, int(target_snapshots), 1)
 
