@@ -20,12 +20,17 @@ def substitute_interconnectors(n):
     # currently specific to lithuania and poland
     # for synchronizing other countries adaptations are necessary
 
+    links_to_drop = None
     synchronizers = None
     for c in range(1,snakemake.config['synchronizer_circuits']+1):
         fields = ['bus0', 'bus1', 'length', 'capital_cost', 'terrain_factor']
         level_synchronizers = n.links.loc[[((b0[:2] == 'PL') & (b1[:2] == 'LT')) |
                                            ((b1[:2] == 'PL') & (b0[:2] == 'LT'))
                                            for b0, b1 in zip(n.links.bus0, n.links.bus1)]]
+        
+        if links_to_drop is None:
+            links_to_drop = level_synchronizers.index
+
         level_synchronizers['type'] = 'Al/St 240/40 4-bundle 380.0'
         level_synchronizers['v_nom'] = 380.
         level_synchronizers['s_nom'] = c * np.sqrt(3) * level_synchronizers.type.map(n.line_types.i_nom) * level_synchronizers.v_nom
@@ -39,10 +44,11 @@ def substitute_interconnectors(n):
     synchronizers['s_nom_min'] = 0.
 
     n.lines = n.lines.append(synchronizers)
+    n.links.drop(links_to_drop, axis=0, inplace=True)
 
     n.calculate_dependent_values()
 
-    return n.lines
+    return n.lines, n.links
 
 
 times = pd.Series()
@@ -75,13 +81,13 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
                 n.links.loc[n.links.carrier!='DC', 'p_nom_extendable'] = False
                 line_expansion_volume = ((n.lines.s_nom_opt - n.lines.s_nom) * n.lines.length).sum() / 1e6  # TWkm
                 link_expansion_volume = ((n.links.p_nom_opt - n.links.p_nom) * n.links.length).sum() / 1e6  # TWkm
-                logger.info("Volume of continuous transmission line expansion is {0:.2f} TWkm for links and {0:.2f} TWkm for lines.".format(link_expansion_volume, line_expansion_volume))
-                if snakemake.wildcards.region == 'baltics':
-                    n.lines = substitute_interconnectors(n)
+                logger.info("Volume of continuous transmission line expansion is {0:.2f} TWkm for links and {1:.2f} TWkm for lines.".format(link_expansion_volume, line_expansion_volume))
             times["prepare tep {}".format(i)] = t.usec
 
         with timer("infer candidates") as t:
             n.lines = pypsa.tepopf.infer_candidates_from_existing(n)
+            if snakemake.wildcards.region == 'baltics':
+                    n.lines, n.links = substitute_interconnectors(n)
         times["candidates {}".format(i)] = t.usec
 
         with timer("building pyomo model") as t:
@@ -90,10 +96,12 @@ with memory_logger(filename=snakemake.log.memory, interval=5.) as mem:
         times["building {}".format(i)] = t.usec
 
         with timer("solving model") as t:
-            pypsa.opf.network_lopf_prepare_solver(n, milp_solver_name)
-            pypsa.opf.network_lopf_solve(n, formulation=snakemake.wildcards.formulation,
-                solver_options=milp_solver_options,
-                solver_logfile=snakemake.log.solver)
+            pypsa.opf.network_lopf_prepare_solver(n, solver_name=milp_solver_name)
+            status, termination_condition = \
+                pypsa.opf.network_lopf_solve(n, formulation=snakemake.wildcards.formulation,
+                    solver_options=milp_solver_options,
+                    solver_logfile=snakemake.log.solver,
+                    candidates=True)
         times["solving {}".format(i)] = t.usec
 
         with timer("exporting network") as t:
