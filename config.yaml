@@ -44,4 +44,4 @@ lp_solver:
 
 link_unit_p_nom: 1700
 synchronizer_circuits: 3
-load_shedding: false
+load_shedding: true
