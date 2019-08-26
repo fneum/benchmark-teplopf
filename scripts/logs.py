@@ -109,7 +109,7 @@ def extract_from_log_gurobi(logfile):
 if __name__ == '__main__':
     network = pypsa.Network(snakemake.input.network)
 
-    solve_conf = snakemake.config['solver']
+    solve_conf = snakemake.config['milp_solver']
     solver_name = solve_conf['name']
 
     stats = extract_from_log(snakemake.input.solver, solver_name)
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     stats['pot_circuits'] = snakemake.wildcards.lv
     stats['formulation'] = snakemake.wildcards.formulation
     stats['target_gap'] = snakemake.wildcards.gap
-    stats['threads'] = solve_conf['Threads']
+    stats['threads'] = solve_conf['threads']
     stats['walltime'] = solve_conf['TimeLimit']
 
     for o in snakemake.wildcards.opts.split('-'):
