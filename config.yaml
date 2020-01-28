@@ -1,39 +1,39 @@
 scenarios-space:
-  clusters: [100] #,200,300,400,500,600,700,800,900]
-  ll: ['vopt']
+  clusters: [100,150,180,300] #,200,300,400,500,600,700,800,900]
+  ll: ['copt']
   snapshots: [1,5]
-  opts: [Co2L0.1-1H, Co2L0.2-1H]
+  opts: [Co2L0.2-1H]
   formulation: [angles, kirchhoff]
-  gap: [0.005,0.001]
-  lv: [1.0,2.0,3.0]
-  problem: [TEP, GTEP]
-  region: [germany, baltics]
+  gap: [0.001]
+  lv: [1,2]
+  problem: [GTEP] #[TEP, GTEP]
+  region: [germany] #, baltics]
 
 scenarios-time:
   clusters: [30]
-  ll: ['vopt']
-  snapshots: [50] #,100,200,300,400]
-  opts: [Co2L0.1-1H, Co2L0.2-1H]
+  ll: ['copt']
+  snapshots: [50,100,200,300,400] #,100,200,300,400]
+  opts: [Co2L0.2-1H]
   formulation: [angles, kirchhoff]
-  gap: [0.005,0.001]
-  lv: [1.0,2.0,3.0]
-  problem: [TEP, GTEP]
+  gap: [0.001]
+  lv: [1,2]
+  problem: [GTEP] #[TEP, GTEP]
   region: [germany, baltics]
 
 iterations: 1
 
 milp_solver:
   name: gurobi
-  threads: 8
+  threads: 4
   Method: 3
-  TimeLimit: 40000
+  TimeLimit: 43200 # 6*3600s
   MIPFocus: 2
   Heuristics: 0.3
   Cuts: 1
 
 lp_solver:
   name: gurobi
-  threads: 8
+  threads: 4
   method: 2 # barrier
   crossover: 0
   BarConvTol: 1.e-5
@@ -43,5 +43,5 @@ lp_solver:
   GURO_PAR_BARDENSETHRESH: 200
 
 link_unit_p_nom: 1700
-synchronizer_circuits: 3
+synchronizer_circuits: 2
 load_shedding: true

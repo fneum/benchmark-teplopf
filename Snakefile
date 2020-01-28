@@ -1,7 +1,3 @@
-# TODO: fix environment file
-import os
-os.system("pip install tsam")
-
 configfile: "config.yaml"
 
 wildcard_constraints:
@@ -31,13 +27,13 @@ subworkflow pypsaeur_baltics:
 
 
 rule prepare_network_germany:
-    input: pypsaeur_germany("networks/elec_s_{clusters}_l{ll}_{opts}.nc")
+    input: pypsaeur_germany("networks/elec_s_{clusters}_l{ll}_{opts}_ec.nc")
     output: "networks/germany/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}.nc"
     script: "scripts/prepare.py"
 
 
 rule prepare_network_baltics:
-    input: pypsaeur_baltics("networks/elec_s_{clusters}_l{ll}_{opts}.nc")
+    input: pypsaeur_baltics("networks/elec_s_{clusters}_l{ll}_{opts}_ec.nc")
     output: "networks/baltics/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}.nc"
     script: "scripts/prepare.py"
 
@@ -51,6 +47,7 @@ rule solve_network:
         times="benchmarks/{region}/times_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.csv",
         solver="benchmarks/{region}/solver_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.log"
     threads: max(config["milp_solver"]["threads"], config["lp_solver"]["threads"])
+    resources: mem=20000
     benchmark: "benchmarks/{region}/snakemake_elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.txt"
     script: "scripts/solve.py"
 
@@ -65,27 +62,21 @@ rule summarize_individual:
     script: "scripts/logs.py"
 
 
-prepare_path = "networks/{region}/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}.nc"
-
 rule prepare_all_networks:
     input:
-        expand(prepare_path, **config['scenarios-space']),
-        expand(prepare_path, **config['scenarios-time'])
+        expand("networks/{region}/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}.nc", **config['scenarios-space']),
+        expand("networks/{region}/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}.nc", **config['scenarios-time'])
 
-
-solve_path = "results/{region}/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.nc"
 
 rule solve_all:
     input:
-        expand(solve_path, **config['scenarios-space']),
-        expand(solve_path, **config['scenarios-time'])
+        expand("results/{region}/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.nc", **config['scenarios-space']),
+        expand("results/{region}/networks/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.nc", **config['scenarios-time'])
 
-
-summarize_path = "results/{region}/summaries/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.csv"
 
 rule summarize_all:
     input:
-        expand(summarize_path, **config['scenarios-space']),
-        expand(summarize_path, **config['scenarios-time'])
+        expand("results/{region}/summaries/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.csv", **config['scenarios-space']),
+        expand("results/{region}/summaries/elec_s_{clusters}_l{ll}_t{snapshots}_{opts}_lv{lv}_gap{gap}_p{problem}_{formulation}.csv", **config['scenarios-time'])
     output: "results/summaries/joint_summary.csv"
     script: "scripts/summary.py"
