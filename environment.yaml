@@ -27,4 +27,4 @@ dependencies:
 
   - pip:
     - vresutils>=0.2.5
-    - git+https://git.scc.kit.edu/FN/pypsa.git@tep#egg=pypsa
+    - git+https://github.com/pypsa.git@tep-v2#egg=pypsa

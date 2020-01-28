@@ -1,32 +1,33 @@
 scenarios-space:
-  clusters: [100,150,180,300] #,200,300,400,500,600,700,800,900]
-  ll: ['copt']
-  snapshots: [1,5]
-  opts: [Co2L0.2-1H]
+  clusters: [250]
+  snapshots: [1]
+  opts: [Co2L-1H]
   formulation: [angles, kirchhoff]
-  gap: [0.001]
-  lv: [1,2]
-  problem: [GTEP] #[TEP, GTEP]
-  region: [germany] #, baltics]
+  gap: [0.01]
+  candidates: [1]
+  problem: [GTEP]
+  region: [DE-NL-LU, FR-BE, ES-PT, GB-IE, IT-CH-AT-LI-SI, CZ-PL-LT-LV-EE, SE-FI-DK-NO, RO-RS-BA-ME-HR-MK-GR-AL-BG-HU-SK]
 
 scenarios-time:
-  clusters: [30]
-  ll: ['copt']
-  snapshots: [50,100,200,300,400] #,100,200,300,400]
-  opts: [Co2L0.2-1H]
+  clusters: [250]
+  snapshots: [5]
+  opts: [Co2L-1H]
   formulation: [angles, kirchhoff]
-  gap: [0.001]
-  lv: [1,2]
-  problem: [GTEP] #[TEP, GTEP]
-  region: [germany, baltics]
+  gap: [0.01]
+  candidates: [1]
+  problem: [GTEP]
+  region: [DE-NL-LU, FR-BE, ES-PT, GB-IE, IT-CH-AT-LI-SI, CZ-PL-LT-LV-EE, SE-FI-DK-NO, RO-RS-BA-ME-HR-MK-GR-AL-BG-HU-SK]
 
 iterations: 1
+link_unit_p_nom: 1700
+synchronizer_circuits: 2
+load_shedding: true
 
 milp_solver:
   name: gurobi
   threads: 4
   Method: 3
-  TimeLimit: 43200 # 6*3600s
+  TimeLimit: 21600 # 6*3600s
   MIPFocus: 2
   Heuristics: 0.3
   Cuts: 1
@@ -41,7 +42,3 @@ lp_solver:
   AggFill: 0
   PreDual: 0
   GURO_PAR_BARDENSETHRESH: 200
-
-link_unit_p_nom: 1700
-synchronizer_circuits: 2
-load_shedding: true

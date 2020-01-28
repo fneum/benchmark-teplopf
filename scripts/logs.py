@@ -1,5 +1,6 @@
-# extracts logged data from multiple sources such as
-# the pypsa network and the solver logfile
+"""
+Extracts logged data from multiple sources such as from pypsa.Network and the solver logfile.
+""""
 
 import logging
 logging.basicConfig(level=logging.WARNING)
@@ -107,6 +108,7 @@ def extract_from_log_gurobi(logfile):
     return stats
 
 if __name__ == '__main__':
+
     network = pypsa.Network(snakemake.input.network)
 
     solve_conf = snakemake.config['milp_solver']
@@ -117,11 +119,12 @@ if __name__ == '__main__':
     stats['N'] = len(network.buses)
     stats['L'] = len(network.lines)
     stats['T'] = len(network.snapshots)
-    stats['pot_circuits'] = snakemake.wildcards.lv
+    stats['pot_circuits'] = snakemake.wildcards.candidates
     stats['formulation'] = snakemake.wildcards.formulation
     stats['target_gap'] = snakemake.wildcards.gap
     stats['threads'] = solve_conf['threads']
     stats['walltime'] = solve_conf['TimeLimit']
+    stats['region'] = snakemake.wildcards.region
 
     for o in snakemake.wildcards.opts.split('-'):
         if 'Co2L' in o:
