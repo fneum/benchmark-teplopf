@@ -1,6 +1,6 @@
 """
 Extracts logged data from multiple sources such as from pypsa.Network and the solver logfile.
-""""
+"""
 
 import logging
 logging.basicConfig(level=logging.WARNING)
@@ -128,8 +128,7 @@ if __name__ == '__main__':
 
     for o in snakemake.wildcards.opts.split('-'):
         if 'Co2L' in o:
-            m = re.findall("[0-9]*\.?[0-9]+$", o)
-            stats['co2limit'] = float(m[0])
+            stats['co2limit'] = 40
 
     clines = network.lines.loc[~network.lines.operative]
     elines = network.lines.loc[network.lines.operative]

@@ -1,20 +1,20 @@
 scenarios-space:
-  clusters: [250]
-  snapshots: [1]
+  clusters: [250, 500, 750, 1000]
+  snapshots: [1, 5]
   opts: [Co2L-1H]
   formulation: [angles, kirchhoff]
   gap: [0.01]
-  candidates: [1]
+  candidates: [1,2]
   problem: [GTEP]
   region: [DE-NL-LU, FR-BE, ES-PT, GB-IE, IT-CH-AT-LI-SI, CZ-PL-LT-LV-EE, SE-FI-DK-NO, RO-RS-BA-ME-HR-MK-GR-AL-BG-HU-SK]
 
 scenarios-time:
-  clusters: [250]
-  snapshots: [5]
+  clusters: [250, 500, 750]
+  snapshots: [25, 50]
   opts: [Co2L-1H]
   formulation: [angles, kirchhoff]
   gap: [0.01]
-  candidates: [1]
+  candidates: [1,2]
   problem: [GTEP]
   region: [DE-NL-LU, FR-BE, ES-PT, GB-IE, IT-CH-AT-LI-SI, CZ-PL-LT-LV-EE, SE-FI-DK-NO, RO-RS-BA-ME-HR-MK-GR-AL-BG-HU-SK]
 

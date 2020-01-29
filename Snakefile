@@ -22,6 +22,9 @@ rule prepare_network:
     output: "networks/elec_s_{clusters}_t{snapshots}_r{region}_{opts}.nc"
     script: "scripts/prepare.py"
 
+def memory(w):
+    factor = int(w.snapshots) / 100
+    return 1000 + int(factor * (1000 + 20 * int(w.clusters)))
 
 rule solve_network:
     input: "networks/elec_s_{clusters}_t{snapshots}_r{region}_{opts}.nc"
@@ -32,7 +35,7 @@ rule solve_network:
         times="benchmarks/times_elec_s_{clusters}_t{snapshots}_r{region}_{opts}_c{candidates}_g{gap}_p{problem}_{formulation}.csv",
         solver="benchmarks/solver_elec_s_{clusters}_t{snapshots}_r{region}_{opts}_c{candidates}_g{gap}_p{problem}_{formulation}.log"
     threads: max(config["milp_solver"]["threads"], config["lp_solver"]["threads"])
-    resources: mem=20000
+    resources: mem=memory
     benchmark: "benchmarks/snakemake_elec_s_{clusters}_t{snapshots}_r{region}_{opts}_c{candidates}_g{gap}_p{problem}_{formulation}.txt"
     script: "scripts/solve.py"
 

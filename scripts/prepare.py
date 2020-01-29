@@ -111,12 +111,12 @@ if __name__ == "__main__":
 
     n = pypsa.Network(snakemake.input[0])
 
-    countries = snakemake.wildcards.countries.split("-")
+    countries = snakemake.wildcards.region.split("-")
 
     filter_countries(n, countries=countries)
 
     # >>> workaround fixed in https://github.com/PyPSA/pypsa-eur/commit/97985e3c5219a75392291125914225d116ba81e9
-    n.lines.loc[n.lines.num_parallel == 0.0, "num_parallel"] = 1.0
+    n.lines.loc[n.lines.num_parallel == 0.0, ["num_parallel", 's_nom']] = [1.0, 1700]
     n.lines.s_nom_extendable = True
     n.calculate_dependent_values()
     # <<<
