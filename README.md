@@ -1,3 +1,7 @@
+![GitHub](https://img.shields.io/github/license/fneum/benchmark-teplopf)
+
+![GitHub repo size](https://img.shields.io/github/repo-size/fneum/benchmark-teplopf)
+
 # Benchmark of PyPSA Transmission Expansion Planning (TEP)
 
 This repository contains code to reproduce the benchmarks from the paper
