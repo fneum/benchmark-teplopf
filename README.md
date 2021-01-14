@@ -4,7 +4,7 @@
 
 # Benchmark of PyPSA Transmission Expansion Planning (TEP)
 
-This repository contains code to reproduce the benchmarks from the paper
+This repository contains the snakemake workflow to reproduce the benchmarks from the paper
 
 **Fabian Neumann and Tom Brown. 2020. Transmission Expansion Planning Using Cycle Flows. In Proceedings of the Eleventh ACM International Conference on Future Energy Systems (e-Energy ’20).**
 
